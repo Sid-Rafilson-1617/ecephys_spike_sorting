@@ -19,12 +19,12 @@ def create_samba_directory(samba_server, samba_share):
     return data_dir
 
 def createInputJson(output_file, 
-                    npx_directory=None, # to use CatGT, this must be specified as the parent directory containing the run directories. Must also include the gate, triggers to concatenate and which probe to process!
+                    npx_directory=None, 
                     continuous_file = None,
                     spikeGLX_data=True,
                     input_meta_path=None,
                     extracted_data_directory=None,
-                    kilosort_output_directory=None, # where the phy files will be written!
+                    kilosort_output_directory=None,
                     ks_make_copy=False,
                     probe_type='',
                     catGT_run_name='test',
@@ -49,7 +49,7 @@ def createInputJson(output_file,
                     tPrime_3A = False,
                     toStream_path_3A = ' ',
                     fromStream_list_3A = list(),
-                    ks_ver = '4', # changed kilosort version to 4.0!
+                    ks_ver = '2.0',
                     ks_helper_noise_threshold = 20,
                     ks_doFilter = 0,
                     ks_remDup = 0,                   
@@ -74,18 +74,11 @@ def createInputJson(output_file,
                     include_pc_metrics = True,
                     ks_nNeighbors_sites_fix = 0,
                     ks4_duplicate_spike_ms = 0.25,
-                    ks4_min_template_size_um = 10,
-                    lfp_sample_rate = 2500,
+                    ks4_min_template_size_um = 10
                     ):
-    
-    # ensure the parent directory for the output JSON exists
-    print(f'\n\n\nOutput JSON file: {output_file}')
-    out_parent = os.path.dirname(output_file)
-    if out_parent and not os.path.isdir(out_parent):
-        os.makedirs(out_parent, exist_ok=True)
 
     # hard coded paths to code on your computer and system
-    ecephys_directory = r'D:\Sid\ecephys_spike_sorting-master\ecephys_spike_sorting'
+    ecephys_directory = r'C:\Users\colonellj\Documents\ecephys_spike_sorting\ecephys_spike_sorting'
     
     # location of kilosort respositories for MATLAB versions.
     # determins what will be run by the kilosort_helper module
@@ -99,13 +92,13 @@ def createInputJson(output_file,
     else:
         kilosort_repository = r''  # default path for when we aren't using any of these
             
-    npy_matlab_repository = r'c:\Users\Buzlab\Documents\MATLAB\npy-matlab-master'
-    catGTPath = r'c:\Users\Buzlab\Documents\ecephys_JC\CatGTWinApp\CatGT-win'
-    tPrime_path=r'c:\Users\Buzlab\Documents\ecephys_JC\TPrimeWinApp\TPrime-win'
-    cWaves_path=r'c:\Users\Buzlab\Documents\ecephys_JC\C_WavesWinApp\C_Waves-win'
+    npy_matlab_repository = r'C:\Users\colonellj\Documents\npy-matlab-master'
+    catGTPath = r'C:\Users\colonellj\Documents\CatGT-win-47'
+    tPrime_path=r'C:\Users\colonellj\Documents\TPrime-win'
+    cWaves_path=r'C:\Users\colonellj\Documents\C_Waves-win'
          
     # for config files and kilosort working space
-    kilosort_output_tmp = r'D:\Sid\kilosort_datatemp' 
+    kilosort_output_tmp = r'D:\kilosort_datatemp' 
     
     
     # KS 3.0 and 4 do not calculation pc features for phy
@@ -233,7 +226,7 @@ def createInputJson(output_file,
         "ephys_params": {
             "probe_type" : probe_type,
             "sample_rate" : sample_rate,
-            "lfp_sample_rate" : lfp_sample_rate,
+            "lfp_sample_rate" : 2500,
             "bit_volts" : uVPerBit,
             "num_channels" : num_channels,
             "num_sync_channels" : nSY,
