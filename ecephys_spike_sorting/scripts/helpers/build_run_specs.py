@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 
-def build_run_specs(DIR: str, region: str = 'hippocampus') -> list[list]:
+def build_run_specs(DIR: str, region: str = 'hippocampus'):
     """
     Build run specifications for CatGT and supercat based on the folders in spikeGLX  data directory
 

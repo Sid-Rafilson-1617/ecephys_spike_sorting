@@ -1,0 +1,12 @@
+name: ks4_ece
+channels:
+  - defaults
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+  - https://repo.anaconda.com/pkgs/msys2
+dependencies:
+  - python=3.9
+  - pytorch
+  - pytorch-cuda=11.8
+  - pynvml
+prefix: C:\Users\Buzlab\anaconda3\envs\ks4_ece

@@ -13,7 +13,7 @@ from helpers import run_one_probe
 from helpers.build_run_specs import build_run_specs
 from create_input_json import createInputJson
 
-
+#eng.addpath(r'c:\Users\Buzlab\Documents\ecephys_JC\CatGTWinApp\CatGT-win', nargout=0)
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------- USER CONFIG AREA ----------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ from create_input_json import createInputJson
 
 
 # Directory containing NPX data folders (e.g. run_g0/run_g0_imec0)
-NPX_DIR = r"\\research-cifs.nyumc.org\research\buzsakilab\Homes\voerom01\Use_dependent_sleep\UDS_R01\UDS_R01_20250207"
+NPX_DIR = r"\\research-cifs.nyumc.org\research\buzsakilab\Homes\voerom01\Bilat_HPC\Bilat_R02\Bilat_R02_20251106"
 
 # Directory to write output; will contain run/probe folders
 DEST = os.path.join(NPX_DIR, 'preprocessing_output')
@@ -59,8 +59,8 @@ print(f"Current directory: {os.getcwd()}")
 run_specs = build_run_specs(NPX_DIR)
 print(f"Run specifications for concatenation: {run_specs}")
 
-manuaal_run_sepcs = False
-if manuaal_run_sepcs:
+manual_run_sepcs = False
+if manual_run_sepcs:
     run_specs = [
     ['pre_homecage', '0', 'start,end', '0', ['hippocampus', 'cortex']],
     ['linear_maze', '0', 'start,end', '0', ['hippocampus', 'cortex']],
@@ -93,7 +93,7 @@ ni_present = False
 
 
 # extract param string for psth events 
-event_ex_param_str = ['-xd=2,0,384,6,500', '-xd=1,0,8,12,0'] # Need to figure out the correct format for this. The list breaks the quality metrics module
+event_ex_param_str = ['-xd=2,0,384,6,500', '-xd=1,6,8,12,0'] # was -xd=1,0,8,12,0 but changed to extract digital input channel 6 for new TTLs
 
 
 
@@ -190,7 +190,7 @@ toStream_sync_params = 'imec0' # should be ni, imec<probe index>. or obx<obx ind
 # ----------------
 # Cleanup options
 # ----------------
-move_output_bin = False  # move the supercat binary files to the NPX_DIR
+move_output_bin = False  # move the supercat binary files to the NPX_DIR. Doing this in MATLAB
 delete_catgt = True    # delete intermediate catgt folders after processing
 
 
@@ -472,7 +472,7 @@ def main():
         fileName = run_str + '_tcat.imec' + prb + '.ap.bin'
         continuous_file = os.path.join(data_directory[i], fileName)
  
-        outputName = 'imec' + prb + '_' + ks_output_tag
+        outputName = 'Kilosort_imec' + prb + '_' + ks_output_tag
 
         # kilosort_postprocessing and noise_templates moduules alter the files
         # that are input to phy. If using these modules, keep a copy of the
@@ -483,6 +483,7 @@ def main():
             ks_make_copy = False
 
         kilosort_output_dir = os.path.join(data_directory[i], outputName)
+        print('Kilosort output directory: ' + kilosort_output_dir)
 
         
         # get region specific parameters
@@ -586,28 +587,13 @@ def main():
                 shutil.rmtree(run_path)
 
 
-    # CUT AND PASTE THE SUPERCAT BINARY FILES TO THE MAIN DIRECTORY
-    if move_output_bin:
-        output_bin_files = []
-        for i, prb in enumerate(prb_list): 
+    # RUN MATLAB CODE
+    #if run_MATLAB:
+        #eng.NP2_preprocess_MATLAB()
 
-            print('Copying binary files for probe: ' + prb) 
-            run_str = spec[0] + '_g' + str(first_gate)
-            run_folder = catGT_out_tag + '_' + run_str
-            prb_folder = run_str + '_imec' + prb
-            data_directory = os.path.join(DEST, run_folder, prb_folder)
-            fileName = run_str + '_tcat.imec' + prb + '.ap.bin'
-            continuous_file = os.path.join(data_directory, fileName)
-            output_bin_files.append(os.path.join(DEST, fileName))
-            shutil.move(continuous_file, NPX_DIR)
-            print('Copied ' + continuous_file + ' to ' + NPX_DIR)
+
+
             
-            if process_lf:
-                fileName = run_str + '_tcat.imec' + prb + '.lf.bin'
-                continuous_file = os.path.join(data_directory, fileName)
-                output_bin_files.append(os.path.join(DEST, fileName))
-                shutil.move(continuous_file, NPX_DIR)
-                print('Copied ' + continuous_file + ' to ' + NPX_DIR)
 
 
 
