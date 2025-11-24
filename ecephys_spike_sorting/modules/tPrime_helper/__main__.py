@@ -14,6 +14,9 @@ from ecephys_spike_sorting.scripts.helpers import SpikeGLX_utils
 
 def call_TPrime(args):
 
+
+    print('Starting TPrime helper module')
+
     # Run TPrime on a "standard" multiprobe + NI, using NP 1.0 or 2.0, with run
     # folder and probe folders
     # inputs:
@@ -117,6 +120,9 @@ def call_TPrime(args):
                          
     else:
         # Must be running with data from older CatGT with no fyi file
+        print('\n\nchecking for fyi file at: ')
+        print(fyi_path)
+        print('\n')
         
         print('No fyi file found.')
         print('You can generate a new fyi file by running an extract only pass on the CatGT output.')
