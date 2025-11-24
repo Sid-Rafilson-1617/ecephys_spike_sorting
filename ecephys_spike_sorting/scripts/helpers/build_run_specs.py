@@ -19,6 +19,7 @@ def build_run_specs(DIR: str, region: str = 'hippocampus'):
 
         # Checking for obx meta files. If they exist, this is a run folder and the meta file contains the necessary information for the concatenation order (fileCreateTime)
         metafile = [sf.name for sf in Path(os.path.join(DIR, f)).iterdir() if sf.name.endswith('.meta')]
+
         if metafile:
 
             # get gate value

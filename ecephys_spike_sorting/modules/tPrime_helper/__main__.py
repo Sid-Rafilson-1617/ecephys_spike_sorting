@@ -15,7 +15,7 @@ from ecephys_spike_sorting.scripts.helpers import SpikeGLX_utils
 def call_TPrime(args):
 
 
-    print('Starting TPrime helper module')
+    print('\nStarting TPrime helper module')
 
     # Run TPrime on a "standard" multiprobe + NI, using NP 1.0 or 2.0, with run
     # folder and probe folders
@@ -45,7 +45,7 @@ def call_TPrime(args):
     sync_period = args['tPrime_helper_params']['sync_period']
     
     sort_out_tag = args['tPrime_helper_params']['sort_out_tag']
-    output_pat = 'imec*_' + sort_out_tag
+    output_pat = 'Kilosort_imec*_' + sort_out_tag
     sort_out_list = list()
     
     # check for presence of an fyi file, indicating run with catgt 3.0 or later
@@ -174,12 +174,15 @@ def call_TPrime(args):
 
         
     # make the TPrime call
-    subprocess.Popen(tcmd,shell='False').wait()
+    p = subprocess.Popen(tcmd, shell=False)
+    ret = p.wait()
+    print("TPrime return code:", ret)
 
     # convert output files were text, convert to npy
     if not bNPY:
         for op in out_list:
             spike_times_sec_to_npy(op)
+
             
             
     # if the psth extract string is not null
@@ -194,6 +197,206 @@ def call_TPrime(args):
     print('total time: ' + str(np.around(execution_time, 2)) + ' seconds')
 
     return {"execution_time": execution_time}  # output manifest
+
+def call_TPrime_new(args):
+
+    print('\nStarting TPrime helper module')
+
+    # Run TPrime on a "standard" multiprobe + NI, using NP 1.0 or 2.0, with run
+    # folder and probe folders
+    # inputs:
+    # full path to Tprime executable
+    # parameters for "to stream" extracted edges ("to stream" = the reference stream for the data set)
+    # parameters for NI sync edges
+    
+    # bNPY, if True, no text files of spike times will be written
+    bNPY = True
+    if bNPY:
+        outSuffix = '.npy'
+    else:
+        outSuffix = '.txt'
+
+    print('ecephys spike sorting: TPrime helper module')
+    start = time.time()
+    
+    # build paths to the input data for TPrime
+    first_gate, last_gate = SpikeGLX_utils.ParseGateStr(args['catGT_helper_params']['gate_string'])
+    catGT_dest = args['directories']['extracted_data_directory']
+    run_name = args['catGT_helper_params']['run_name'] + '_g' + str(first_gate)
+    run_dir_name = args['tPrime_helper_params']['catGT_out_tag'] + '_' + run_name
+    prb_dir_prefix = run_name + '_imec'
+    
+    # extracted edge files for aux data reside in run directory
+    run_directory = os.path.join(catGT_dest, run_dir_name)
+    sync_period = args['tPrime_helper_params']['sync_period']
+    
+    sort_out_tag = args['tPrime_helper_params']['sort_out_tag']
+    output_pat = 'Kilosort_imec*_' + sort_out_tag
+    sort_out_list = list()
+    
+    # check for presence of an fyi file, indicating run with catgt 3.0 or later
+    fyi_path = run_directory.replace('\\', '/') + '/' + run_name + '_all_fyi.txt'
+    all_fyi_exists = Path(fyi_path).is_file()
+    fyi_exists = False  # default
+
+    if args['tPrime_helper_params']['catGT_out_tag'] == 'supercat':
+        # only use offsets for runs that have been processed with supercat
+        offset_path = run_directory.replace('\\', '/') + '/' + run_name + '_sc_offsets.txt'
+        offset_exists = Path(offset_path).is_file()
+    else:
+        offset_exists = False
+        offset_path = None
+    
+    if not all_fyi_exists:
+        # check for an fyi file -- assume that CatGT was run directly from
+        # a batch file for all probes, and use that, but also print message
+        print('No _all_fyi.txt file found.')
+        print('Checking for _fyi.txt file from CatGT run outside ecephys pipeline.')
+        fyi_path = run_directory.replace('\\', '/') + '/' + run_name + '_fyi.txt'
+        fyi_exists = Path(fyi_path).is_file()
+
+    if all_fyi_exists or fyi_exists:
+        
+        toStream_params = args['tPrime_helper_params']['toStream_sync_params']
+        toStream_js, toStream_ip = parse_stream(toStream_params)
+        toStream_id = (toStream_js, toStream_ip)
+        toStream_path, from_list, from_list_ids, events_list, from_stream_index, out_list, all_list = \
+            parse_catgt_fyi(fyi_path, toStream_id)
+            
+        # If toStream is an imec probe, create spike_times_sec and a copy spike_times_sec_adj
+        if toStream_js == 2:
+            prb_dir = prb_dir_prefix + str(toStream_ip)
+            prb_path = Path(os.path.join(run_directory, prb_dir))
+            ks_outdir_iter = prb_path.glob(output_pat)
+            for ks_outdir in ks_outdir_iter:
+                sort_out_list.append(ks_outdir)
+                st_file = os.path.join(run_directory, prb_dir, ks_outdir, 'spike_times.npy')
+                # convert to seconds; if bNPY = True, returned file is an npy file
+                toStream_events_sec = spike_times_npy_to_sec(st_file, 0, bNPY)
+                # create a copy with name = spike_times_sec_adj
+                shutil.copyfile(
+                    toStream_events_sec,
+                    os.path.join(run_directory, prb_dir, ks_outdir, 'spike_times_sec_adj.npy')
+                )
+                if not bNPY:
+                    spike_times_sec_to_npy(toStream_events_sec)
+                        
+        # loop over the from_list_ids; for any that are probes, need to create 
+        # files of spike times, and append to event_list, from_stream_index, and out_list
+        for i, id in enumerate(from_list_ids):
+            if id[0] == 2:      # imec stream                
+                prb_dir = prb_dir_prefix + str(id[1])
+                prb_path = Path(os.path.join(run_directory, prb_dir))
+                ks_outdir_iter = prb_path.glob(output_pat)
+                for ks_outdir in ks_outdir_iter:
+                    sort_out_list.append(ks_outdir)
+                    st_file = os.path.join(run_directory, prb_dir, ks_outdir, 'spike_times.npy')
+                    st_file_sec = spike_times_npy_to_sec(st_file, 0, bNPY)
+                    from_stream_index.append(i)
+                    events_list.append(st_file_sec)
+                    out_name = 'spike_times_sec_adj' + outSuffix
+                    out_file = os.path.join(run_directory, prb_dir, ks_outdir, out_name)
+                    out_list.append(out_file)
+                         
+    else:
+        # Must be running with data from older CatGT with no fyi file
+        print('\n\nchecking for fyi file at: ')
+        print(fyi_path)
+        print('\n')
+        
+        print('No fyi file found.')
+        print('You can generate a new fyi file by running an extract only pass on the CatGT output.')
+        print('Typical extract only command line also see CatGT Readme under: -t=cat defer extraction to a later pass ')
+        print('-dir=<catGT_dest> -run=catgt_<run_name> -g=0 -t=cat -ap -ni -prb=0 -prb_fld -no_tshift ^ ' )
+        print('-ap -ni -prb=0 -prb_fld -no_tshift ^')
+        print('<ni extraction string for CatGT 4.0> ^')
+        print('dest=<catGT_dest>')
+        # and bail out early
+        execution_time = time.time() - start
+        return {"execution_time": execution_time}
+    
+
+    print('toStream:')
+    print(toStream_path)
+    print('fromStream')
+    for fp in from_list:
+        print(fp)
+    print('event files')
+    for i, ep in enumerate(events_list):
+        print('index: ' + repr(from_stream_index[i]) + ',' + ep)
+    print('output files')
+    for op in out_list:
+        print(op)
+        
+    # path to the 'runit.bat' executable that calls TPrime.
+    if sys.platform.startswith('win'):
+        exe_path = os.path.join(args['tPrime_helper_params']['tPrime_path'], 'runit.bat')
+    elif sys.platform.startswith('linux'):
+        exe_path = os.path.join(args['tPrime_helper_params']['tPrime_path'], 'runit.sh')
+    else:
+        print('unknown system, cannot run TPrime')
+        execution_time = time.time() - start
+        return {"execution_time": execution_time}
+        
+    # Build the common part of the TPrime command *once*
+    tcmd_common = [
+        exe_path,
+        f"-syncperiod={sync_period}",
+        f"-tostream={toStream_path}",
+    ]
+    if offset_exists and offset_path is not None:
+        tcmd_common.append(f"-offsets={offset_path}")
+
+    for i, fp in enumerate(from_list):
+        tcmd_common.append(f"-fromstream={i},{fp}")
+
+    # Write one example command to a txt file for record (first event)
+    bat_path = os.path.join(run_directory, run_name + '_TPrime_cmd.txt')
+    if len(events_list) > 0:
+        example_cmd = tcmd_common + [
+            f"-events={from_stream_index[0]},{events_list[0]},{out_list[0]}"
+        ]
+        with open(bat_path, 'w') as batfile:
+            batfile.write(" ".join(example_cmd))
+    else:
+        with open(bat_path, 'w') as batfile:
+            batfile.write("No events_list entries\n")
+
+    # ---- NEW: run TPrime once per event file ----
+    for i, ep in enumerate(events_list):
+        ev_idx = from_stream_index[i]
+        out_file = out_list[i]
+
+        tcmd = list(tcmd_common)  # copy
+        tcmd.append(f"-events={ev_idx},{ep},{out_file}")
+
+        print("TPrime cmd for event", i, ":", " ".join(tcmd))
+        p = subprocess.Popen(tcmd, shell=False)
+        ret = p.wait()
+        print(f"TPrime return code for event {i}:", ret)
+
+    # convert output files were text, convert to npy
+    if not bNPY:
+        for op in out_list:
+            spike_times_sec_to_npy(op)
+            #continue
+            
+    # if the psth extract string is not null
+    extract_str = args['tPrime_helper_params']['psth_ex_str']
+    if len(extract_str) > 0:
+        create_PSTH_events(
+            all_list,
+            out_list,
+            sort_out_list,
+            extract_str,
+            args['tPrime_helper_params']['sort_out_tag']
+        )
+
+    execution_time = time.time() - start
+    print('total time: ' + str(np.around(execution_time, 2)) + ' seconds')
+
+    return {"execution_time": execution_time}  # output manifest
+
 
 
 def spike_times_npy_to_sec(sp_fullPath, sample_rate, bNPY):
