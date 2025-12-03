@@ -26,7 +26,7 @@ from create_input_json import createInputJson
 
 
 # Directory containing NPX data folders (e.g. run_g0/run_g0_imec0)
-NPX_DIR = r"r:\Bilat_HPC\Bilat_R02\Bilat_R02_20251106"
+NPX_DIR = r"d:\Sid\data\testing_orig"
 
 # Directory to write output; will contain run/probe folders
 DEST = os.path.join(NPX_DIR, 'preprocessing_output')
@@ -62,16 +62,16 @@ manual_run_sepcs = False
 if manual_run_sepcs:
     # [run_name, gate_str, probe_str, brain_region_list]
     run_specs = [
-    ['pre_homecage', '0', 'start,end', '0', ['hippocampus', 'cortex']],
-    ['linear_maze', '0', 'start,end', '0', ['hippocampus', 'cortex']],
-    ['post_homecage', '0', 'start,end', '0', ['hippocampus', 'cortex']]
+    ['pre_homecage_gluc', '0', '0:2', ['hippocampus', 'cortex']],
+    ['linear_gluc', '1', '0:2', ['hippocampus', 'cortex']],
+    ['post_homecage_gluc', '0', '0:2', ['hippocampus', 'cortex']]
 ]
 
 
 
 
 # this will run the CatGT pass 1 and pass 2 (supercat) steps
-run_catGT = True
+run_catGT = False
 pass_1 = True
 pass_2 = True
 
@@ -95,7 +95,7 @@ obx_present = True
 
 # extract param string for psth events 
 event_ex_param_str = ['-xd=2,0,384,6,500', '-xd=1,0,6,12,0'] # was -xd=1,0,8,12,0 but changed to extract digital input channel 6 for new TTLs. Put the square (sync) channel first and the cammera TTL second. 
-
+skip_obx_on_pass1 = [] # list of run indices to skip the -ob flag on pass 1
 
 
 # PROCESSING PARAMS
@@ -207,6 +207,7 @@ delete_catgt = True    # delete intermediate catgt folders after processing
 ks_ver = '4'  # needs to be one of: '2.0', '2.5', '3.0', or '4'
 ksTag_dict = {'2.0':'ks2', '2.5':'ks25', '3.0':'ks3', '4':'ks4'}
 ks_output_tag = ksTag_dict[ks_ver]
+ks_doFilter = 1 # set to 1 to do the bandpass filtering in KS4; 0 to skip filtering (if already filtered in CatGT)
 
 
 # threshold values appropriate for KS4.0
@@ -303,7 +304,14 @@ def do_pass1(catgt_exe: str, log_file: Path) -> None:
     n_runs = len(cmds)
     for i, cmd in enumerate(cmds, start=1):
         print(f"\n--- Pass 1 Run {i}/{n_runs} ---")
+
+        # if i == 0 remove the -xd flags 
+        if i in skip_obx_on_pass1:
+            cmd = [c for c in cmd if not c.startswith('-ob')]
+            print(cmd)
+
         run_subprocess(cmd, log_file)
+
     print("=== Pass 1 complete. See log for details. ===")
 
 
@@ -454,7 +462,8 @@ def main():
                                        catGT_stream_string = catGT_stream_string,
                                        catGT_cmd_string = ' ' + extract_string,                                       
                                        extracted_data_directory = DEST,
-                                       lfp_sample_rate = lfp_sample_rate
+                                       lfp_sample_rate = lfp_sample_rate,
+                                       ks_doFilter = ks_doFilter
                                        )    
 
 
