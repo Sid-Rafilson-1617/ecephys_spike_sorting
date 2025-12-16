@@ -174,7 +174,7 @@ def call_TPrime(args):
 
         
     # make the TPrime call
-    p = subprocess.Popen(tcmd, shell=False)
+    p = subprocess.Popen(tcmd, shell=True)  # Changed shell = False to shell = True SR
     ret = p.wait()
     print("TPrime return code:", ret)
 

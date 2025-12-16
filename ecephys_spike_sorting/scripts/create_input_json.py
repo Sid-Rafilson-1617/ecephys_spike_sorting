@@ -85,7 +85,7 @@ def createInputJson(output_file,
         os.makedirs(out_parent, exist_ok=True)
 
     # hard coded paths to code on your computer and system
-    ecephys_directory = r'c:\Users\Buzlab\OneDrive\Buzsaki Rotation Project\ecephys_spike_sorting'
+    ecephys_directory = r'/gpfs/home/ser9475/Documents/ecephys_spike_sorting'
     
     # location of kilosort respositories for MATLAB versions.
     # determins what will be run by the kilosort_helper module
@@ -100,12 +100,12 @@ def createInputJson(output_file,
         kilosort_repository = r''  # default path for when we aren't using any of these
             
     npy_matlab_repository = r'c:\Users\Buzlab\Documents\MATLAB\npy-matlab-master'
-    catGTPath = r'c:\Users\Buzlab\Documents\ecephys_JC\CatGTWinApp\CatGT-win'
-    tPrime_path=r'c:\Users\Buzlab\Documents\ecephys_JC\TPrimeWinApp\TPrime-win'
-    cWaves_path=r'c:\Users\Buzlab\Documents\ecephys_JC\C_WavesWinApp\C_Waves-win'
+    catGTPath = r'/gpfs/share/apps/anaconda3/gpu/2025.06/envs/kilosort/CatGT-linux'
+    tPrime_path=r'/gpfs/share/apps/anaconda3/gpu/2025.06/envs/kilosort/TPrime-linux'
+    cWaves_path=r'/gpfs/share/apps/anaconda3/gpu/2025.06/envs/kilosort/C_Waves-linux'
          
     # for config files and kilosort working space
-    kilosort_output_tmp = r'D:\Sid\kilosort_datatemp' 
+    kilosort_output_tmp = r"/gpfs/data/buzsakilab/sid/kilosort_data_temp"
     
     
     # KS 3.0 and 4 do not calculation pc features for phy

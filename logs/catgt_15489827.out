@@ -1,0 +1,45 @@
+Current directory: /gpfs/data/buzsakilab/sid/testing
+Run specifications for concatenation: [['pre_homecage', '0', '0:1', ['hippocampus', 'hippocampus']], ['linear_maze', '0', '0:1', ['hippocampus', 'hippocampus']], ['post_homecage', '0', '0:1', ['hippocampus', 'hippocampus']]]
+=== Starting CatGT Pass 1 ===
+
+--- Pass 1 Run 1/3 ---
+
+
+[2025-12-16 15:48:48] Running command:
+/gpfs/share/apps/anaconda3/gpu/2025.06/envs/kilosort/CatGT-linux/runit.sh -dir=/gpfs/data/buzsakilab/sid/testing -run=pre_homecage -g=0 -prb=0:1 -t=0,0 -prb_fld -ap -ob -obx=0 -out_prb_fld -gblcar -lffilter=butter,4,0.1,450 -pass1_force_ni_ob_bin -dest=/gpfs/data/buzsakilab/sid/testing/preprocessing_output -xd=2,0,384,6,500 -xd=1,0,6,12,0 -lf -ap2lf_dwnsmp=24
+
+
+[exit code: 0]
+
+
+--- Pass 1 Run 2/3 ---
+
+
+[2025-12-16 15:49:04] Running command:
+/gpfs/share/apps/anaconda3/gpu/2025.06/envs/kilosort/CatGT-linux/runit.sh -dir=/gpfs/data/buzsakilab/sid/testing -run=linear_maze -g=0 -prb=0:1 -t=0,0 -prb_fld -ap -ob -obx=0 -out_prb_fld -gblcar -lffilter=butter,4,0.1,450 -pass1_force_ni_ob_bin -dest=/gpfs/data/buzsakilab/sid/testing/preprocessing_output -xd=2,0,384,6,500 -xd=1,0,6,12,0 -lf -ap2lf_dwnsmp=24
+
+
+[exit code: 0]
+
+
+--- Pass 1 Run 3/3 ---
+
+
+[2025-12-16 15:49:21] Running command:
+/gpfs/share/apps/anaconda3/gpu/2025.06/envs/kilosort/CatGT-linux/runit.sh -dir=/gpfs/data/buzsakilab/sid/testing -run=post_homecage -g=0 -prb=0:1 -t=0,0 -prb_fld -ap -ob -obx=0 -out_prb_fld -gblcar -lffilter=butter,4,0.1,450 -pass1_force_ni_ob_bin -dest=/gpfs/data/buzsakilab/sid/testing/preprocessing_output -xd=2,0,384,6,500 -xd=1,0,6,12,0 -lf -ap2lf_dwnsmp=24
+
+
+[exit code: 0]
+
+=== Pass 1 complete. See log for details. ===
+=== Starting CatGT Pass 2 (supercat) ===
+
+
+[2025-12-16 15:49:35] Running command:
+/gpfs/share/apps/anaconda3/gpu/2025.06/envs/kilosort/CatGT-linux/runit.sh -supercat={/gpfs/data/buzsakilab/sid/testing/preprocessing_output,catgt_pre_homecage_g0}{/gpfs/data/buzsakilab/sid/testing/preprocessing_output,catgt_linear_maze_g0}{/gpfs/data/buzsakilab/sid/testing/preprocessing_output,catgt_post_homecage_g0} -prb=0:1 -ap -ob -obx=0 -supercat_trim_edges -prb_fld -out_prb_fld -dest=/gpfs/data/buzsakilab/sid/testing/preprocessing_output -lf -xd=2,0,384,6,500 -xd=1,0,6,12,0
+
+
+[exit code: 0]
+
+=== Pass 2 complete. See log for details. ===
+Skipping TPrime because stage='catgt' or runTPrime=False
