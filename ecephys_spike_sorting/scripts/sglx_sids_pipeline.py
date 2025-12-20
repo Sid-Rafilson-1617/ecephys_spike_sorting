@@ -27,7 +27,7 @@ from create_input_json import createInputJson
 
 
 # Directory containing NPX data folders (e.g. run_g0/run_g0_imec0)
-NPX_DIR = r"/gpfs/data/buzsakilab/sid/testing"
+NPX_DIR = r"/gpfs/data/buzsakilab/sid/Bilat_R02_20251109"
 
 # Directory to write output; will contain run/probe folders
 DEST = os.path.join(NPX_DIR, 'preprocessing_output')
@@ -63,9 +63,9 @@ manual_run_sepcs = False
 if manual_run_sepcs:
     # [run_name, gate_str, probe_str, brain_region_list]
     run_specs = [
-    ['pre_homecage_gluc', '0', '0:2', ['hippocampus', 'cortex']],
-    ['linear_gluc', '1', '0:2', ['hippocampus', 'cortex']],
-    ['post_homecage_gluc', '0', '0:2', ['hippocampus', 'cortex']]
+    ['pre_sleep', '0', '0:3', ['hippocampus', 'hippocampus', 'hippocampus', 'hippocampus']],
+    ['m_maze_novel_2', '0', '0:3', ['hippocampus', 'hippocampus', 'hippocampus', 'hippocampus']],
+    ['post_sleep', '0', '0:3', ['hippocampus', 'hippocampus', 'hippocampus', 'hippocampus']]
 ]
 
 
@@ -136,7 +136,9 @@ if ni_present:
 # The folder names follow CatGT's convention: catgt_<run>_g<g>
 
 SUPERCAT_SOURCES = [(DEST, f'catgt_{spec[0]}_g0') for spec in run_specs]
-
+SUPERCATDEST = os.path.join(DEST, f'supercat')
+os.makedirs(SUPERCATDEST, exist_ok=True)
+SUPERCATDEST = DEST
 
 # SUPERCAT PARAMS
 SUPERCAT_PARAMS = [
@@ -146,7 +148,7 @@ SUPERCAT_PARAMS = [
     "-supercat_trim_edges",
     "-prb_fld",
     "-out_prb_fld",
-    f"-dest={DEST}",
+    f"-dest={SUPERCATDEST}",
 ]
 
 if process_lf:
@@ -362,41 +364,45 @@ def do_pass2(catgt_exe: str, log_file: Path) -> None:
 
 def main(stage: str = 'all', probe_index: int | None = None):
 
-    # RUN CATGT AND SUPERCAT
+	# RUN CATGT AND SUPERCAT
 	if stage in ('catgt', 'all'):
 		if not run_catGT:
 			print("Warning: stage requests CatGT but run_catGT is False in config")
-		       
+			   
 		# set passes
 		if pass_1 and not pass_2:
 			which_pass = '1'
 		elif pass_2 and not pass_1:
-		    which_pass = '2'
+			which_pass = '2'
+		elif not pass_1 and not pass_2:
+			which_pass = 'none'
 		else:
-		    which_pass = 'both'
-		
+			which_pass = 'both'
+	
 
 		log_file = Path(os.path.join(DEST, logName))
 
 		try:
-		    if which_pass in ("1", "both"):
-		        do_pass1(catgt, log_file)
-		    if which_pass in ("2", "both"):
-		        do_pass2(catgt, log_file)
+			if which_pass in ("1", "both"):
+				do_pass1(catgt, log_file)
+			if which_pass in ("2", "both"):
+				do_pass2(catgt, log_file)
+			if which_pass == 'none':
+				print('skipping CatGT pass 1 and 2')
 		except Exception as e:
-		    print(f"\nFATAL: {e}", file=sys.stderr)
-		    sys.exit(2)
+			print(f"\nFATAL: {e}", file=sys.stderr)
+			sys.exit(2)
 	else:
 		print(f"Skipping CatGT because stage='{stage}'")
 
 
 
 
-    # --------------------------------------------------------
-    # KILOSORT + POSTPROCESSING ON SUPERCAT OUTPUT
-    # --------------------------------------------------------
-    # We build the JSONs and path info for ks/tprime in all
-    # stages except pure CatGT-only runs.
+	# --------------------------------------------------------
+	# KILOSORT + POSTPROCESSING ON SUPERCAT OUTPUT
+	# --------------------------------------------------------
+	# We build the JSONs and path info for ks/tprime in all
+	# stages except pure CatGT-only runs.
 	if stage in ("kilosort", "tprime_cleanup", "all"):
 		print("\n\n=== Preparing Kilosort / postprocessing inputs ===\n")
 

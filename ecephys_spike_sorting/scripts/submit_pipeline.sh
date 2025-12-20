@@ -6,13 +6,13 @@ set -euo pipefail
 ########################
 
 ACCOUNT="ser9475"            # Slurm account
-CPU_PARTITION="cpu_long"          # CPU partition
+CPU_PARTITION="cpu_short"          # CPU partition
 GPU_PARTITION="gpu8_medium"          # GPU partition
 MAIL_USER="ser9475@nyu.edu"  # set "" to disable notifications
 
 CODE_DIR="/gpfs/home/ser9475/Documents/ecephys_spike_sorting"
 PIPELINE_SCRIPT="ecephys_spike_sorting/scripts/sglx_sids_pipeline.py"
-N_PROBES=2                   # number of probes / GPUs
+N_PROBES=4                   # number of probes / GPUs
 
 mkdir -p logs
 
@@ -29,9 +29,9 @@ cat > "$CATGT_SCRIPT" <<'EOS'
 #SBATCH --partition=CPU_PARTITION_PLACEHOLDER
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=256G
-#SBATCH --time=24:00:00
+#SBATCH --cpus-per-task=128
+#SBATCH --mem=32G
+#SBATCH --time=06:00:00
 #SBATCH --output=logs/catgt_%j.out
 #SBATCH --error=logs/catgt_%j.err
 
@@ -56,7 +56,7 @@ fi
 echo "CatGT job submitted with JobID: $CATGT_JOBID"
 
 ###############################
-#1)       KILOSORT           #
+#2)       KILOSORT           #
 ##############################
 
 echo "Submitting Kilosort GPU job (N_PROBES=$N_PROBES)..."
@@ -65,13 +65,12 @@ KS_SCRIPT=$(mktemp)
 cat > "$KS_SCRIPT" <<'EOS'
 #!/usr/bin/env bash
 #SBATCH --job-name=ks4_sort
-#SBATCH --partition=GPU_PARTITION_PLACEHOLDER
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:a100:1
 #SBATCH --mem=256G
-#SBATCH --time=48:00:00
+#SBATCH --time=12:00:00
 #SBATCH --array=0-N_LAST_PROBE_PLACEHOLDER
 #SBATCH --output=logs/ks4_%A_%a.out
 #SBATCH --error=logs/ks4_%A_%a.err
@@ -116,7 +115,7 @@ cat > "$TP_SCRIPT" <<'EOS'
 #SBATCH --partition=CPU_PARTITION_PLACEHOLDER
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=128
 #SBATCH --mem=256Gb
 #SBATCH --time=6:00:00
 #SBATCH --output=logs/tprime_%j.out
