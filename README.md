@@ -1,8 +1,10 @@
-# ecephys spike sorting -- for SpikeGLX data
+# ecephys spike sorting -- for SpikeGLX data -- modified for Buzsaki Lab
 
 ![ecephys_spike_sorting_icon](icon.png)
 
-Modules for processing **e**xtra**c**ellular **e**lectro**phys**iology data from Neuropixels probes, originally developed at the Allen Institute for Brain Science. This fork has been modified to run with SpikeGLX data, including integration of CatGT (preprocessing), C_Waves(calculation of SNR and mean waveforms) and TPrime (synchronization across data streams). The data can be sorted with any version of Kilosort; a version of IBL's pykilosort is also available.
+Modules for processing **e**xtra**c**ellular **e**lectro**phys**iology data from Neuropixels probes, originally developed at the Allen Institute for Brain Science. This fork has been modified to run with SpikeGLX data, including integration of CatGT (preprocessing), C_Waves(calculation of SNR and mean waveforms) and TPrime (synchronization across data streams). Aditional scripts have been added for running preprocessing pipeline for multiple neuropixels probes recorded in the Buzsaki Lab.
+
+For preprocessing instructions see [preprocessing_instruction](ecephys_spike_sorting/scripts/preprocessing_pipeline/README.md)
 
 Code including modifications for SpikeGLX
 https://github.com/jenniferColonell/ecephys_spike_sorting
@@ -264,7 +266,7 @@ NOTE: The pipeline is now compatible with the latest CatGT. If you are updating 
 
 ### Edit parameters for your system and runs
 
-Parameters are set in two files. Values that are constant across runs—like paths to code, parameters for sorting, etc – are set in **create_input_json.py**. Parameters that need to be set per run (run names, which triggers and probes to process…) are set in script files.
+Parameters are set in two files. Values that are constant across runsï¿½like paths to code, parameters for sorting, etc ï¿½ are set in **create_input_json.py**. Parameters that need to be set per run (run names, which triggers and probes to processï¿½) are set in script files.
 
 In **create_input_json.py**, be sure to set these paths and parameters for your system:
 
