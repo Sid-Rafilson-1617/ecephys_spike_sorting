@@ -12,7 +12,7 @@ MAIL_USER="ser9475@nyu.edu"  # set "" to disable notifications
 
 CODE_DIR="/gpfs/home/ser9475/Documents/ecephys_spike_sorting"
 PIPELINE_SCRIPT="ecephys_spike_sorting/scripts/sglx_sids_pipeline.py"
-N_PROBES=1                   # number of probes / GPUs
+N_PROBES=4                   # number of probes / GPUs
 
 mkdir -p logs
 
