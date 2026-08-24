@@ -52,7 +52,7 @@ print(f"Current directory: {os.getcwd()}")
 # Cleanup options
 # ----------------
 move_output_bin = False  # move the supercat binary files to the NPX_DIR. Doing this in MATLAB
-delete_catgt = False     # delete intermediate catgt folders after processing
+delete_catgt = True     # delete intermediate catgt folders after processing
 
 
 
@@ -476,12 +476,12 @@ def main(stage: str = 'all', probe_index: int | None = None):
 			catGT_output_json.append(os.path.join(json_directory, session_base_id + prb + '_CatGT' + '-output.json'))
 			
 			if i == 0 and ni_present:
-			    catGT_stream_string = '-ap -ni'
+				catGT_stream_string = '-ap -ni'
 			else:
-			    catGT_stream_string = '-ap'
+				catGT_stream_string = '-ap'
 			
 			if process_lf:
-			    catGT_stream_string = catGT_stream_string + ' -lf'
+				catGT_stream_string = catGT_stream_string + ' -lf'
 			
 			run_str = session_base_id + '_g' + str(first_gate)         
 			prb_folder = run_str + '_imec' + prb
@@ -526,9 +526,9 @@ def main(stage: str = 'all', probe_index: int | None = None):
 			outputName = 'Kilosort_imec' + prb + '_' + ks_output_tag
 
 			if ('kilosort_postprocessing' in modules) or ('noise_templates' in modules):
-			    ks_make_copy = True
+				ks_make_copy = True
 			else:
-			    ks_make_copy = False
+				ks_make_copy = False
 
 			kilosort_output_dir = os.path.join(data_directory[i], outputName)
 			print('Kilosort output directory: ' + kilosort_output_dir)
@@ -580,22 +580,22 @@ def main(stage: str = 'all', probe_index: int | None = None):
 			print("\n\n=== Now running kilosort and postprocessing on supercat output ===\n")
 
 			for i, prb in enumerate(prb_list):
-			    # If probe_index is set, only run that specific probe
-			    if probe_index is not None and i != probe_index:
-			        continue
+				# If probe_index is set, only run that specific probe
+				if probe_index is not None and i != probe_index:
+					continue
 
-			    print(f"Running Kilosort on probe index {i} (prb={prb})")
-			    run_one_probe.runOne(
-			        session_ids[i],
-			        json_directory,
-			        data_directory[i],
-			        False,  # do not run CatGT; already done
-			        catGT_input_json[i],
-			        catGT_output_json[i],
-			        modules,
-			        module_input_json[i],
-			        logFullPath,
-			    )
+				print(f"Running Kilosort on probe index {i} (prb={prb})")
+				run_one_probe.runOne(
+					session_ids[i],
+					json_directory,
+					data_directory[i],
+					False,  # do not run CatGT; already done
+					catGT_input_json[i],
+					catGT_output_json[i],
+					modules,
+					module_input_json[i],
+					logFullPath,
+				)
 		else:
 			print(f"Skipping Kilosort because stage='{stage}'")
 	else:
@@ -605,24 +605,24 @@ def main(stage: str = 'all', probe_index: int | None = None):
 		continuous_file = None
 		kilosort_output_dir = None
 
-        
-      
+		
+		
 
 
-    # ------------------------------
-    # RUN TPRIME AND CLEANUP
-    # ------------------------------
+	# ------------------------------
+	# RUN TPRIME AND CLEANUP
+	# ------------------------------
 	if stage in ("tprime_cleanup", "all") and runTPrime:
 		spec = run_specs[0]  # reuse
 		print('\n\n=== Now running TPrime on session: ' + spec[0] + ' ===\n')
 
 		if create_aux_timepoints:
-		    if ni_present:            
-		        SpikeGLX_utils.CreateAuxTimeEvents(spec[0], str(first_gate), DEST, stream='ni')
-		    if obx_present:
-		        obx_list = SpikeGLX_utils.ParseProbeStr(spec[2])
-		        for obx_ind in obx_list:
-		            SpikeGLX_utils.CreateAuxTimeEvents(spec[0], str(first_gate), DEST, stream=f'obx{obx_ind}')  
+			if ni_present:            
+				SpikeGLX_utils.CreateAuxTimeEvents(spec[0], str(first_gate), DEST, stream='ni')
+			if obx_present:
+				obx_list = SpikeGLX_utils.ParseProbeStr(spec[2])
+				for obx_ind in obx_list:
+					SpikeGLX_utils.CreateAuxTimeEvents(spec[0], str(first_gate), DEST, stream=f'obx{obx_ind}')  
 		
 		session_id_tprime = spec[0] + '_TPrime'
 		input_json = os.path.join(json_directory, session_id_tprime + '-input.json')
@@ -664,13 +664,13 @@ def main(stage: str = 'all', probe_index: int | None = None):
 	# delete catgt intermediate folders if needed
 	if stage in ("tprime_cleanup", "all") and delete_catgt:
 		for spec in run_specs:
-		    [first_gate, last_gate] = SpikeGLX_utils.ParseGateStr(spec[1])
-		    for gate_index in range(first_gate, last_gate+1):
-		        run_str = spec[0] + '_g' + repr(gate_index)
-		        run_folder =  'catgt_' + run_str
-		        run_path = os.path.join(DEST, run_folder)
-		        print('Deleting CatGT intermediate folder: ' + run_path)
-		        shutil.rmtree(run_path)
+			[first_gate, last_gate] = SpikeGLX_utils.ParseGateStr(spec[1])
+			for gate_index in range(first_gate, last_gate+1):
+				run_str = spec[0] + '_g' + repr(gate_index)
+				run_folder =  'catgt_' + run_str
+				run_path = os.path.join(DEST, run_folder)
+				print('Deleting CatGT intermediate folder: ' + run_path)
+				shutil.rmtree(run_path)
 
 
 
