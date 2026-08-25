@@ -19,14 +19,14 @@ Note that since Tprime is here only ran on spike times, the LFPs and additional 
 An account with the [BigPurple HPC](https://hpcmed.org/guide/get-started) should be set up prior to running this pipeline. SSH on to the cluster `{KID}@bigpurple.nyumc.org` (For windows use [PuTTY](https://putty.org/index.html)) and clone this repository into your Home Directory
 
 
-1. `cd /gpfs/home/{userName}`
+1. `cd /gpfs/home/{KID}`
 
-2. `git clone https://github.com/Sid-Rafilson-1617/ecephys_spike_sorting.git'`
+2. `git clone 'https://github.com/Sid-Rafilson-1617/ecephys_spike_sorting.git'`
 
 
 
 ### 2. Transfer raw data to the HPC
-Data transfer from the Buzsaki lab share `\research-cifs.nyumc.org\research` to Big Purple `bigpurple.nyumc.org` is easy with [WinSCP](https://winscp.net/eng/download.php), or for Mac users [Cyberduck](https://cyberduck.io/). The data should be moved to `/gpfs/data/buzsakilab/{userName}`.
+Data transfer from the Buzsaki lab share `\research-cifs.nyumc.org\research` to Big Purple `bigpurple.nyumc.org` is easy with [WinSCP](https://winscp.net/eng/download.php), or for Mac users [Cyberduck](https://cyberduck.io/). The data should be moved to `/gpfs/data/buzsakilab/{KID}`.
 
 Testing data can be found at `"Z:\Buzsakilabspace\Datasets\RafilsonS\testing-datasets\testing-multi-NPX-SGLX"`
 
