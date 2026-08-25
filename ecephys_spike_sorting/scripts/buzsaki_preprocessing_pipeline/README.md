@@ -5,7 +5,10 @@
 Sid.Rafilson@nyu.edu
 
 ## Description
-This is the first part of the preprocessing pipeline which concatenates within sessions recordings (for example: pre_sleep -> behavior -> post_sleep) runs the spike sorting, and runs TPrime for aligning spike times across probes. After running this pipeline the data will be ready for the [second part of preprocessing](https://github.com/Sid-Rafilson-1617/CellExplorer/blob/main/pipeline_sr.m) where the data is loaded into CellExplorer and formatted according to Buzsaki Lab data standardization.
+This is the first part of the preprocessing pipeline which concatenates within sessions recordings (for example: pre_sleep -> behavior -> post_sleep) runs the spike sorting, and runs TPrime for aligning spike times across probes. When recording data across multiple headstages, the samples are not aligned in time, and so it is critical that Tprime is run so that spike times are mapped to a global clock.  After running this pipeline the data will be ready for the [second part of preprocessing](https://github.com/Sid-Rafilson-1617/CellExplorer/blob/main/pipeline_sr.m) where the data is loaded into CellExplorer and formatted according to Buzsaki Lab data standardization.
+
+
+Note that since Tprime is here only ran on spike times, the LFPs and additional LFP detected events (ripples, sleep states, etc) will still need to be aligned across probes with different headstages. This can be achieved using the buzcode function [bz_alignEvents](temp_path_no_function_yet). This is a critical step since small sampling rate differences across headtsages lead to misalignment on the order of seconds.
 
 
 ## Instructions
@@ -19,7 +22,7 @@ An account with the [BigPurple HPC](https://hpcmed.org/guide/get-started) should
 2. `git clone -b hpc https://github.com/Sid-Rafilson-1617/ecephys_spike_sorting.git'`
 
 ### 2. Transfer raw data to the HPC
-Data transfer from the Buzsaki lab share `\research-cifs.nyumc.org\research` to Big Purple `bigpurple.nyumc.org` is easy with [WinSCP](https://winscp.net/eng/download.php). The data should be moved to `/gpfs/data/buzsakilab/{userName}`
+Data transfer from the Buzsaki lab share `\research-cifs.nyumc.org\research` to Big Purple `bigpurple.nyumc.org` is easy with [WinSCP](https://winscp.net/eng/download.php), or for Mac users [Cyberduck](https://cyberduck.io/). The data should be moved to `/gpfs/data/buzsakilab/{userName}`
 
 ### 3. Define paths and parameters in run scripts
 Once the data is transfered this can be varified with the HPC GUI [Open OnDemand](https://ondemand.hpc.nyumc.org/). Using either the Virtual Desktop or Files dropdown the files can be inspected and edited. Navigate to the [main run bash script](/ecephys_spike_sorting/scripts/buzsaki_preprocessing_pipeline/submit_pipeline.sh) and rename the following variables under USER CONFIG SECTION
