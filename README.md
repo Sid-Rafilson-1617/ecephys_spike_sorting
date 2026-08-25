@@ -4,7 +4,7 @@
 
 Modules for processing **e**xtra**c**ellular **e**lectro**phys**iology data from Neuropixels probes, originally developed at the Allen Institute for Brain Science. This fork has been modified to run with SpikeGLX data, including integration of CatGT (preprocessing), C_Waves(calculation of SNR and mean waveforms) and TPrime (synchronization across data streams). Aditional scripts have been added for running preprocessing pipeline for multiple neuropixels probes recorded in the Buzsaki Lab.
 
-For preprocessing instructions for **Buzsaki Lab members** see [preprocessing_instruction](ecephys_spike_sorting/scripts/preprocessing_pipeline/README.md)
+For preprocessing instructions for **Buzsaki Lab members** see [preprocessing_instruction](ecephys_spike_sorting/scripts/buzsaki_preprocessing_pipeline/README.md)
 
 
 Code including modifications for SpikeGLX
