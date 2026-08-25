@@ -35,9 +35,9 @@ Testing data can be found at `"Z:\Buzsakilabspace\Datasets\RafilsonS\testing-dat
 ### 3. Define paths and parameters in run scripts
 Once the data is transfered this can be varified with the HPC GUI [Open OnDemand](https://ondemand.hpc.nyumc.org/). Using either the Virtual Desktop or Files dropdown the files can be inspected and edited. Navigate to  [submit_pipeline.sh](/ecephys_spike_sorting/scripts/buzsaki_preprocessing_pipeline/submit_pipeline.sh) and rename the following variables under USER CONFIG SECTION
 
-1. Set your HPC account name on line 8 `ACCOUNT="{userName}"`
-2. Ensure line 13 points to the repository you cloned on the HPC `CODE_DIR="/gpfs/home/{userName}/Documents/ecephys_spike_sorting"`
-3. Set the number of probes on line 15 `N_PROBES=1`
+1. Set your HPC account name on line 8 `ACCOUNT="{KID}"`
+2. Ensure line 13 points to the repository you cloned on the HPC `CODE_DIR="/gpfs/home/{KID}/ecephys_spike_sorting"`
+3. Set the number of probes on line 15 `N_PROBES=2`
 
 Now navigate to [sglx_sids_pipeline.py](/ecephys_spike_sorting/scripts/buzsaki_preprocessing_pipeline/sglx_sids_pipeline.py) and rename the following variables under SPECIFY DIRECTORIES
 
@@ -47,7 +47,7 @@ Now navigate to [sglx_sids_pipeline.py](/ecephys_spike_sorting/scripts/buzsaki_p
 4. There are many more paramters that can changed, examine the code if necessary 
 
 Finally, navigate to [create_input_json.py](/ecephys_spike_sorting/scripts/create_input_json.py) and rename the following variables under createInputJson
-1. Ensure line 87 points to your copy `ecephys_directory = r'/gpfs/home/{userName}/Documents/ecephys_spike_sorting'`
+1. Ensure line 87 points to your copy `ecephys_directory = r'/gpfs/home/{KID}/ecephys_spike_sorting'`
 2. Line 107 should point to your folder kilosort_output_tmp = r"/gpfs/data/buzsakilab/{userName}/kilosort_data_temp"
 
 
@@ -60,12 +60,12 @@ Finally, navigate to [create_input_json.py](/ecephys_spike_sorting/scripts/creat
 
 3. Move to the codebase directory
 
-    `cd /gpfs/home/{userName}/ecephys_spike_sorting`
+    `cd /gpfs/home/{KID}/ecephys_spike_sorting`
 
 4. Add this repository to the python path
 
 
-    `export PYTHONPATH=/gpfs/home/{userName}/ecephys_spike_sorting:/gpfs/home/{userName}/ecephys_spike_sorting/ecephys_spike_sorting/scripts:$PYTHONPATH`
+    `export PYTHONPATH=/gpfs/home/{KID}/ecephys_spike_sorting:/gpfs/home/{KID}/ecephys_spike_sorting/ecephys_spike_sorting/scripts:$PYTHONPATH`
 
 5. run the main run bash script
 
