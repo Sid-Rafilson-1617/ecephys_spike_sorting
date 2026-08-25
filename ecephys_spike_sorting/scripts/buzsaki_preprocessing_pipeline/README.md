@@ -1,11 +1,11 @@
 # Preprocessing pipeline for multiple NeuroPixels recordings in the Buzsaki Lab
-### last modified: 8/24/2026
+### last modified: 8/25/2026
 ***Sidney Rafilson***
 
 Sid.Rafilson@nyu.edu
 
 ## Description
-This is the first part of the preprocessing pipeline which runs CatGT and SuperCat to trims and concatenates within sessions recordings (for example: pre_sleep -> behavior -> post_sleep), runs the kilosort spike sorting, and runs TPrime for aligning spike times across probes. When using multiple neuropixels probes (even when they are connected to the same headstage) the recording stops at different times for each probe. As such, CatGT crops the length of each probe recording so that they are all the same length before SuperCat concatentates everything into a single session. A further complication is introduced When recording data across multiple headstages (which inevitably have slightly different sampling rates) since the samples will not be aligned in time. We run Tprime to map spike times to a global clock which is kept by a 1Hz digital square wave. For more information about this pipeline see the [original repository]('https://github.com/jenniferColonell/ecephys_spike_sorting') written by **Jennifer Colonell** at the Allen Institute.
+This is the first part of the preprocessing pipeline which runs CatGT and Supercat to trim and concatenates within sessions recordings (for example: pre_sleep -> behavior -> post_sleep), runs the kilosort spike sorting, and runs TPrime for aligning spike times across probes. When using multiple neuropixels probes (even when they are connected to the same headstage) the recording stops at different times for each probe. As such, CatGT crops the length of each probe recording so that they are all the same length before SuperCat concatentates everything into a single session. A further complication is introduced When recording data across multiple headstages (which inevitably have slightly different sampling rates) since the samples will not be aligned in time. We run Tprime to map spike times to a global clock which is kept by a 1Hz digital square wave. For more information about this pipeline see the [original repository]('https://github.com/jenniferColonell/ecephys_spike_sorting') written by **Jennifer Colonell** at the Allen Institute.
 
 After running this pipeline the data will be ready for the [second part of preprocessing](https://github.com/Sid-Rafilson-1617/CellExplorer/blob/main/pipeline_sr.m) where the data is loaded into CellExplorer and formatted according to Buzsaki Lab data standardization.
 
