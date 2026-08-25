@@ -77,12 +77,17 @@ cat > "$KS_SCRIPT" <<'EOS'
 #SBATCH --error=logs/ks4_%A_%a.err
 
 module load condaenvs/gpu/kilosort
+export PYTHONNOUSERSITE=1
+
 cd CODE_DIR_PLACEHOLDER
+
 export PYTHONPATH=CODE_DIR_PLACEHOLDER:CODE_DIR_PLACEHOLDER/ecephys_spike_sorting/scripts:$PYTHONPATH
+export GIT_PYTHON_GIT_EXECUTABLE="$(which git)"
+export GIT_PYTHON_REFRESH=quiet
 
 # Array index = probe index
 PROBE_INDEX=$SLURM_ARRAY_TASK_ID
-export CUDA_VISIBLE_DEVICES=0
+
 
 python PIPELINE_SCRIPT_PLACEHOLDER \
   --stage kilosort \
@@ -123,6 +128,7 @@ cat > "$TP_SCRIPT" <<'EOS'
 #SBATCH --error=logs/tprime_%j.err
 
 module load condaenvs/gpu/kilosort
+export PYTHONNOUSERSITE=1
 cd CODE_DIR_PLACEHOLDER
 export PYTHONPATH=CODE_DIR_PLACEHOLDER:CODE_DIR_PLACEHOLDER/ecephys_spike_sorting/scripts:$PYTHONPATH
 
