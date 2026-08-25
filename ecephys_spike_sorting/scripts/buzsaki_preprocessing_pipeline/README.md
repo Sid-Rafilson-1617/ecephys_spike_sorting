@@ -16,7 +16,7 @@ Note that since Tprime is here only ran on spike times, the LFPs and additional 
 
 
 ### 1. Clone repository on HPC
-An account with the [BigPurple HPC](https://hpcmed.org/guide/get-started) should be set up prior to running this pipeline. SSH on to the cluster (For windows use [PuTTY](https://putty.org/index.html)) and clone this repository into your Home Directory
+An account with the [BigPurple HPC](https://hpcmed.org/guide/get-started) should be set up prior to running this pipeline. SSH on to the cluster `{KID}@bigpurple.nyumc.org` (For windows use [PuTTY](https://putty.org/index.html)) and clone this repository into your Home Directory
 
 
 1. `cd /gpfs/home/{userName}`
