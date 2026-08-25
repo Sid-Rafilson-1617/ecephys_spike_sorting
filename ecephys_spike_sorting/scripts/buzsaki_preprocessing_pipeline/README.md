@@ -47,8 +47,8 @@ Now navigate to [sglx_sids_pipeline.py](/ecephys_spike_sorting/scripts/buzsaki_p
 4. There are many more paramters that can changed, examine the code if necessary 
 
 Finally, navigate to [create_input_json.py](/ecephys_spike_sorting/scripts/create_input_json.py) and rename the following variables under createInputJson
-1. Ensure line 88 points to your copy `ecephys_directory = r'/gpfs/home/{userName}/Documents/ecephys_spike_sorting'`
-2. Line 108 should point to your folder kilosort_output_tmp = r"/gpfs/data/buzsakilab/{userName}/kilosort_data_temp"
+1. Ensure line 87 points to your copy `ecephys_directory = r'/gpfs/home/{userName}/Documents/ecephys_spike_sorting'`
+2. Line 107 should point to your folder kilosort_output_tmp = r"/gpfs/data/buzsakilab/{userName}/kilosort_data_temp"
 
 
 
@@ -60,13 +60,22 @@ Finally, navigate to [create_input_json.py](/ecephys_spike_sorting/scripts/creat
 
 3. Move to the codebase directory
 
-    `cd /gpfs/home/{userName}/Documents/ecephys_spike_sorting`
+    `cd /gpfs/home/{userName}/ecephys_spike_sorting`
 
 4. Add this repository to the python path
 
-    `export PYTHONPATH=/gpfs/home/{userName}/Documents/ecephys_spike_sorting:/gpfs/home/{userName}/Documents/ecephys_spike_sorting/ecephys_spike_sorting/scripts:$PYTHONPATH`
+
+    `export PYTHONPATH=/gpfs/home/{userName}/ecephys_spike_sorting:/gpfs/home/{userName}/ecephys_spike_sorting/ecephys_spike_sorting/scripts:$PYTHONPATH`
 
 5. run the main run bash script
 
-    `bash ecephys_spike_sorting/scripts/submit_pipeline.sh`
+    `bash ecephys_spike_sorting/scripts/buzsaki_preprocessing_pipeline/submit_pipeline.sh`
+
+
+### 5. Watching progress and debugging
+1. To see what resources are being used and which are waiting for use type the command `squeue -u {KID}`
+
+2. To cancel the jobs (especially in the case of an error) type `scancel -u {KID}`
+
+2. To check log files navigate to the [logs folder](/logs/). This is where you will find any error messages.
 

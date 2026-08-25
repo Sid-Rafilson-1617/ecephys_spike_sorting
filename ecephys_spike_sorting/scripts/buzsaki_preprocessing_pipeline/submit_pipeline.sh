@@ -11,7 +11,7 @@ GPU_PARTITION="gpu8_medium"          # GPU partition
 MAIL_USER=""
 
 CODE_DIR="/gpfs/home/ser9475/Documents/ecephys_spike_sorting"
-PIPELINE_SCRIPT="ecephys_spike_sorting/scripts/sglx_sids_pipeline.py"
+PIPELINE_SCRIPT="ecephys_spike_sorting/scripts/buzsaki_preprocessing_pipeline/sglx_sids_pipeline.py"
 N_PROBES=2                   # number of probes (GPUs for kilosort)
 
 mkdir -p logs
