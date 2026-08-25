@@ -27,7 +27,7 @@ from create_input_json import createInputJson
 
 
 # Directory containing NPX data folders (e.g. r"/gpfs/data/buzsakilab/{user}/{session}")
-NPX_DIR = r"/gpfs/data/buzsakilab/sid/IIT_M01_20260424"
+NPX_DIR = r"/gpfs/data/buzsakilab/sid/testing-multi-NPX-SGLX"
 
 # Directory to write output; will contain run/probe folders
 DEST = os.path.join(NPX_DIR, 'preprocessing_output')

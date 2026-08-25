@@ -8,13 +8,14 @@ set -euo pipefail
 ACCOUNT="ser9475"            # Slurm account
 CPU_PARTITION="cpu_short"          # CPU partition
 GPU_PARTITION="gpu8_medium"          # GPU partition
-MAIL_USER="ser9475@nyu.edu"  # set "" to disable notifications
+MAIL_USER=""
 
 CODE_DIR="/gpfs/home/ser9475/Documents/ecephys_spike_sorting"
 PIPELINE_SCRIPT="ecephys_spike_sorting/scripts/sglx_sids_pipeline.py"
-N_PROBES=1                   # number of probes / GPUs
+N_PROBES=2                   # number of probes (GPUs for kilosort)
 
 mkdir -p logs
+
 
 ######################################
 # 1) CATGT JOB SCRIPT + SUBMISSION  #
