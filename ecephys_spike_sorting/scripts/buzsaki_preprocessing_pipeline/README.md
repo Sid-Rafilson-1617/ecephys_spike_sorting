@@ -19,7 +19,7 @@ An account with the [BigPurple HPC](https://hpcmed.org/guide/get-started) should
 
 1. `cd /gpfs/home/{userName}`
 
-2. `git clone -b hpc https://github.com/Sid-Rafilson-1617/ecephys_spike_sorting.git'`
+2. `git clone https://github.com/Sid-Rafilson-1617/ecephys_spike_sorting.git'`
 
 ### 2. Transfer raw data to the HPC
 Data transfer from the Buzsaki lab share `\research-cifs.nyumc.org\research` to Big Purple `bigpurple.nyumc.org` is easy with [WinSCP](https://winscp.net/eng/download.php), or for Mac users [Cyberduck](https://cyberduck.io/). The data should be moved to `/gpfs/data/buzsakilab/{userName}`
