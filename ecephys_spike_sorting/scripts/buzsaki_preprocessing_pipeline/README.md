@@ -1,5 +1,6 @@
-# Preprocessing pipeline for multiple NeuroPixels recordings in the Buzsaki Lab
-### last modified: 8/25/2026
+# Preprocessing pipeline for multiple Neuropixels recordings in the Buzsaki Lab <br> Part 1
+
+### last modified: 8/26/2026
 ***Sidney Rafilson***
 
 Sid.Rafilson@nyu.edu
