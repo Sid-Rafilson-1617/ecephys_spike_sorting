@@ -24,6 +24,8 @@ An account with the [BigPurple HPC](https://hpcmed.org/guide/get-started) should
 
 1. `cd /gpfs/home/{KID}`
 
+2. `module load git`
+
 2. `git clone 'https://github.com/Sid-Rafilson-1617/ecephys_spike_sorting.git'`
 
 
@@ -45,7 +47,7 @@ Once the data is transfered this can be varified with the HPC GUI [Open OnDemand
 Now navigate to [sglx_sids_pipeline.py](/ecephys_spike_sorting/scripts/buzsaki_preprocessing_pipeline/sglx_sids_pipeline.py) and rename the following variables under SPECIFY DIRECTORIES
 
 1. Set the path to the raw data on line 30 `NPX_DIR = r"/gpfs/data/buzsakilab/sid/testing_data`
-2. A function was written to get required specifications for CatGT but sometimes it does not work if the data was saved with incorrect naming conventions. If this is the case then on line 67 set `manual_run_specs = True` and edit the run_specs list below.
+2. A function was written to get required specifications for CatGT but sometimes it does not work if the data was saved with incorrect naming conventions. If this is the case then on line 67 set `manual_run_specs = True` and edit the run_specs list below. Take care to use only brain region tags which are specified in the dictionaries on lines 227 and 230 (default, cortex, thalamus or hippocampus), or add an additonal brain region for your experiment. The purpose of specifying the brain region for each probe is so that the kilosort parameters can be set independently for each probe. In almost all cases, using default for brain region will be sufficient. 
 3. On line 113 a parameter string is defined for extracting TTL times and other digitial inputs. This may need to be adjusted if a different channel is being used for the acquisition. `event_ex_param_str = ['-xd=2,0,384,6,500', '-xd=1,0,6,12,0']`
 4. There are many more paramters that can changed, examine the code if necessary 
 
